@@ -1,10 +1,9 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
 	'use strict';
 
 	// Toggle 
 	const softwares = document.getElementsByName('software_type');
 	const plugin = document.getElementById('plugin');
-	const snippet = document.getElementById('snippet');
 	const category = document.getElementById('category');
 	const categories = document.getElementsByName('categories[]');
 	const tagsDiv = document.getElementById('tags-div');
@@ -12,8 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	const max = document.getElementById('max');
 	const submitBtn = document.getElementById('submit-btn');
 	softwares.forEach(software => {
-		software.addEventListener('change', function() {
-			console.log('Yes');
+		software.addEventListener('change', function () {
 			if (plugin.checked) {
 				category.removeAttribute('hidden');
 				categories.forEach(cat => {
@@ -21,10 +19,10 @@ document.addEventListener('DOMContentLoaded', function() {
 					cat.setAttribute('required', 'required');
 
 					// Toggle required attribute according to whether checkbox already selected
-					cat.addEventListener('change', function() {
+					cat.addEventListener('change', function () {
 						let flag = false;
 						for (let i = 0, n = categories.length; i < n; i++) {
-							if (categories[i].checked ) {
+							if (categories[i].checked) {
 								categories.forEach(cat => {
 									cat.removeAttribute('required');
 									flag = true;
@@ -47,11 +45,11 @@ document.addEventListener('DOMContentLoaded', function() {
 					cat.setAttribute('disabled', 'disabled');
 				});
 			}
-			if (snippet.checked) {
+			if (theme.checked) {
 				tagsDiv.removeAttribute('hidden');
 				tags.removeAttribute('disabled');
 				tags.setAttribute('required', 'required');
-				tags.addEventListener('input', function() {
+				tags.addEventListener('input', function () {
 					let count = 0;
 					for (let i = 0, n = tags.value.length; i < n; i++) {
 						if (tags.value.charAt(i) === ',') {
@@ -74,6 +72,47 @@ document.addEventListener('DOMContentLoaded', function() {
 				tags.setAttribute('disabled', 'disabled');
 			}
 		});
+	});
+
+	// Character counter
+	let excerptTxt = document.getElementById('excerpt');
+	let characterCounter = document.getElementById('char-count');
+	const maxNumOfChars = 150;
+
+	const countCharacters = () => {
+		let numOfEnteredChars = excerptTxt.value.length;
+		let counter = maxNumOfChars - numOfEnteredChars;
+		characterCounter.textContent = counter + '/150';
+
+		if (counter == 0) {
+			characterCounter.style.color = 'red';
+		} else if (counter < 30) {
+			characterCounter.style.color = 'orange';
+		} else {
+			characterCounter.style.color = 'black';
+		}
+	};
+
+	excerptTxt.addEventListener('input', countCharacters);
+
+	// Download URL validation
+	var form = document.getElementById('submit-cp-code-form');
+	form.addEventListener('submit', function (event) {
+		event.preventDefault();
+
+		var urlInput = document.getElementById('download_link');
+		var url = urlInput.value.trim();
+
+		// Regular expression to match the URL format for Github
+		var regex = /^https:\/\/github\.com\/.*\/releases\/download\/.*\.zip$/;
+
+		if (!regex.test(url)) {
+			var errorMessage = document.querySelector('.url-error');
+			errorMessage.style.display = 'block';
+			urlInput.classList.add('input-error');
+		} else {
+			form.submit();
+		}
 	});
 
 });

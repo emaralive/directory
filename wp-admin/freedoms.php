@@ -7,13 +7,28 @@
  */
 
 /** ClassicPress Administration Bootstrap */
-require_once( dirname( __FILE__ ) . '/admin.php' );
+require_once __DIR__ . '/admin.php';
 
+// This file was used to also display the Privacy tab on the About screen from 4.9.6 until 5.3.0.
+if ( isset( $_GET['privacy-notice'] ) ) {
+	wp_redirect( admin_url( 'privacy.php' ), 301 );
+	exit;
+}
+
+// Used in the HTML title tag.
 $title = __( 'Freedoms' );
 
-include( ABSPATH . 'wp-admin/admin-header.php' );
+require_once ABSPATH . 'wp-admin/admin-header.php';
 
 $is_privacy_notice = isset( $_GET['privacy-notice'] );
+
+if ( $is_privacy_notice ) {
+	$freedoms_class = '';
+	$privacy_class  = ' nav-tab-active';
+} else {
+	$freedoms_class = ' nav-tab-active';
+	$privacy_class  = '';
+}
 
 ?>
 <div class="wrap about-wrap full-width-layout">
@@ -25,11 +40,13 @@ $is_privacy_notice = isset( $_GET['privacy-notice'] );
 	<?php classicpress_dev_version_info(); ?>
 </p>
 <p class="about-text">
-	<?php printf(
+	<?php
+	printf(
 		/* translators: link to "business-focused CMS" article */
 		__( 'Thank you for using ClassicPress, the <a href="%s">CMS for Creators</a>.' ),
 		'https://link.classicpress.net/the-cms-for-creators'
-	); ?>
+	);
+	?>
 	<br>
 	<?php _e( 'Stable. Lightweight. Instantly Familiar.' ); ?>
 </p>
@@ -39,8 +56,8 @@ $is_privacy_notice = isset( $_GET['privacy-notice'] );
 <h2 class="nav-tab-wrapper wp-clearfix">
 	<a href="about.php" class="nav-tab"><?php _e( 'About' ); ?></a>
 	<a href="credits.php" class="nav-tab"><?php _e( 'Credits' ); ?></a>
-	<a href="freedoms.php" class="nav-tab<?php if ( ! $is_privacy_notice ) { echo ' nav-tab-active'; } ?>"><?php _e( 'Freedoms' ); ?></a>
-	<a href="freedoms.php?privacy-notice" class="nav-tab<?php if ( $is_privacy_notice ) { echo ' nav-tab-active'; } ?>"><?php _e( 'Privacy' ); ?></a>
+	<a href="freedoms.php" class="nav-tab<?php echo $freedoms_class; ?>"><?php _e( 'Freedoms' ); ?></a>
+	<a href="freedoms.php?privacy-notice" class="nav-tab<?php echo $privacy_class; ?>"><?php _e( 'Privacy' ); ?></a>
 </h2>
 
 <?php if ( $is_privacy_notice ) : ?>
@@ -62,16 +79,19 @@ $is_privacy_notice = isset( $_GET['privacy-notice'] );
 		<li><?php _e( 'You have the freedom to distribute copies of your modified versions to others. By doing this you can give the whole community a chance to benefit from your changes. (freedom 3)' ); ?></li>
 	</ul>
 
-	<p><?php
+	<p>
+	<?php
 
 	$plugins_url = current_user_can( 'activate_plugins' ) ? admin_url( 'plugins.php' ) : __( 'https://wordpress.org/plugins/' );
-	$themes_url = current_user_can( 'switch_themes' ) ? admin_url( 'themes.php' ) : __( 'https://wordpress.org/themes/' );
+	$themes_url  = current_user_can( 'switch_themes' ) ? admin_url( 'themes.php' ) : __( 'https://wordpress.org/themes/' );
 
-	printf( __( 'Every plugin and theme in ClassicPress.net&#8217;s directory is 100%% GPL or a similarly free and compatible license, so you can feel safe finding <a href="%1$s">plugins</a> and <a href="%2$s">themes</a> there. If you get a plugin or theme from another source, make sure to ask them if it&#8217;s GPL first. If they don&#8217;t respect the ClassicPress license, we don&#8217;t recommend them.' ), $plugins_url, $themes_url ); ?></p>
+	printf( __( 'Every plugin and theme in ClassicPress.net&#8217;s directory is 100%% GPL or a similarly free and compatible license, so you can feel safe finding <a href="%1$s">plugins</a> and <a href="%2$s">themes</a> there. If you get a plugin or theme from another source, make sure to ask them if it&#8217;s GPL first. If they don&#8217;t respect the ClassicPress license, we don&#8217;t recommend them.' ), $plugins_url, $themes_url );
+	?>
+	</p>
 
 	<p><?php _e( 'Don&#8217;t you wish all software came with these freedoms? So do we! For more information, check out the <a href="https://www.fsf.org/">Free Software Foundation</a>.' ); ?></p>
 </div>
 
 <?php endif; ?>
 </div>
-<?php include( ABSPATH . 'wp-admin/admin-footer.php' ); ?>
+<?php require ABSPATH . 'wp-admin/admin-footer.php'; ?>

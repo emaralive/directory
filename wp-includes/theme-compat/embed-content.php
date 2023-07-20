@@ -7,7 +7,7 @@
  *
  * @package ClassicPress
  * @subpackage Theme_Compat
- * @since WP-4.5.0
+ * @since 4.5.0
  */
 ?>
 	<div <?php post_class( 'wp-embed' ); ?>>
@@ -25,9 +25,9 @@
 		/**
 		 * Filters the thumbnail image ID for use in the embed template.
 		 *
-		 * @since WP-4.9.0
+		 * @since 4.9.0
 		 *
-		 * @param int $thumbnail_id Attachment ID.
+		 * @param int|false $thumbnail_id Attachment ID, or false if there is none.
 		 */
 		$thumbnail_id = apply_filters( 'embed_thumbnail_id', $thumbnail_id );
 
@@ -50,8 +50,8 @@
 			/**
 			 * Filters the thumbnail image size for use in the embed template.
 			 *
-			 * @since WP-4.4.0
-			 * @since WP-4.5.0 Added `$thumbnail_id` parameter.
+			 * @since 4.4.0
+			 * @since 4.5.0 Added `$thumbnail_id` parameter.
 			 *
 			 * @param string $image_size   Thumbnail image size.
 			 * @param int    $thumbnail_id Attachment ID.
@@ -66,8 +66,8 @@
 			 * Rectangular images are shown above the title while square images
 			 * are shown next to the content.
 			 *
-			 * @since WP-4.4.0
-			 * @since WP-4.5.0 Added `$thumbnail_id` parameter.
+			 * @since 4.4.0
+			 * @since 4.5.0 Added `$thumbnail_id` parameter.
 			 *
 			 * @param string $shape        Thumbnail image shape. Either 'rectangular' or 'square'.
 			 * @param int    $thumbnail_id Attachment ID.
@@ -75,7 +75,8 @@
 			$shape = apply_filters( 'embed_thumbnail_image_shape', $shape, $thumbnail_id );
 		}
 
-		if ( $thumbnail_id && 'rectangular' === $shape ) : ?>
+		if ( $thumbnail_id && 'rectangular' === $shape ) :
+			?>
 			<div class="wp-embed-featured-image rectangular">
 				<a href="<?php the_permalink(); ?>" target="_top">
 					<?php echo wp_get_attachment_image( $thumbnail_id, $image_size ); ?>
@@ -103,22 +104,22 @@
 		/**
 		 * Prints additional content after the embed excerpt.
 		 *
-		 * @since WP-4.4.0
+		 * @since 4.4.0
 		 */
 		do_action( 'embed_content' );
 		?>
 
 		<div class="wp-embed-footer">
-			<?php the_embed_site_title() ?>
+			<?php the_embed_site_title(); ?>
 
 			<div class="wp-embed-meta">
 				<?php
 				/**
 				 * Prints additional meta content in the embed template.
 				 *
-				 * @since WP-4.4.0
+				 * @since 4.4.0
 				 */
-				do_action( 'embed_content_meta');
+				do_action( 'embed_content_meta' );
 				?>
 			</div>
 		</div>
